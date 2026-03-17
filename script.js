@@ -4,12 +4,15 @@ let currentIndex = 0;
 let nextPageToken = null;
 let loadingNext = false;
 
+// Detect mobile
+function isMobile() { return window.innerWidth <= 768; }
+
 // Load news
 async function loadNews(nextToken = null){
     if(loadingNext) return;
     loadingNext = true;
 
-    try{
+    try {
         let url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=movies`;
         if(nextToken) url += `&page=${nextToken}`;
 
@@ -19,10 +22,11 @@ async function loadNews(nextToken = null){
         if(!data.results || data.results.length === 0){
             if(pages.length === 0) pages = ["<p>No articles found.</p>"];
             loadingNext = false;
+            render();
             return;
         }
 
-        // Map articles to pages
+        // Map articles to HTML pages
         const newPages = data.results.map(item => `
             <h3>${item.title}</h3>
             ${item.image_url ? `<img src="${item.image_url}" class="news-img">` : ""}
@@ -43,50 +47,85 @@ async function loadNews(nextToken = null){
     }
 }
 
-// Render 2 pages
-// Update the render function
+// Render pages
 function render(){
-    // Left page content
-    document.getElementById("leftPage").innerHTML = (pages[currentIndex] || "") +
-        `<div class="page-number">${currentIndex + 1}</div>`;
+    if(isMobile()){
+        renderMobile();
+        return;
+    }
 
-    // Right page content
-    document.getElementById("rightPage").innerHTML = (pages[currentIndex+1] || "") +
-        `<div class="page-number">${currentIndex + 2}</div>`;
-}
-// Next / Prev buttons
-function next(){
+    const leftPage = document.getElementById("leftPage");
     const rightPage = document.getElementById("rightPage");
-    rightPage.classList.add("flip");  // start flip animation
 
-    setTimeout(() => {
-        currentIndex += 2;
-        if(currentIndex + 2 >= pages.length && nextPageToken){
-            loadNews(nextPageToken);
-        }
-        render(); // update content
-        rightPage.classList.remove("flip"); // reset for next flip
-    }, 400);
+    leftPage.innerHTML = (pages[currentIndex] || "") + `<div class="page-number">${currentIndex+1}</div>`;
+    rightPage.innerHTML = (pages[currentIndex+1] || "") + `<div class="page-number">${currentIndex+2}</div>`;
 }
 
-function prev(){
-    const rightPage = document.getElementById("leftPage");
+// Mobile render
+function renderMobile(){
+    const currentPageEl = document.getElementById("currentPage");
+    currentPageEl.innerHTML = (pages[currentIndex] || "") + `<div class="page-number">${currentIndex+1}</div>`;
+}
+
+// Next page
+function next(){
+    if(isMobile()){
+        if(currentIndex + 1 < pages.length) currentIndex++;
+        renderMobile();
+        // load more if nearing end
+        if(currentIndex + 1 >= pages.length && nextPageToken) loadNews(nextPageToken);
+        return;
+    }
+
+    const rightPage = document.getElementById("rightPage");
+    rightPage.style.zIndex = 3;
     rightPage.classList.add("flip");
 
-    setTimeout(() => {
-        if(currentIndex - 2 >= 0){
-            currentIndex -= 2;
-            render();
-        }
+    setTimeout(()=>{
+        currentIndex += 2;
+        if(currentIndex + 2 >= pages.length && nextPageToken) loadNews(nextPageToken);
+        render();
         rightPage.classList.remove("flip");
-    }, 400);
+        rightPage.style.zIndex = 2;
+    },400);
 }
-document.addEventListener("keydown", function(event) {
-    if(event.key === "ArrowRight") {
-        next();  // move to next 2-page spread
-    } else if(event.key === "ArrowLeft") {
-        prev();  // move to previous 2-page spread
+
+// Previous page
+function prev(){
+    if(isMobile()){
+        if(currentIndex -1 >=0) currentIndex--;
+        renderMobile();
+        return;
     }
+
+    const rightPage = document.getElementById("leftPage");
+    rightPage.style.zIndex = 3;
+    rightPage.classList.add("flip");
+
+    setTimeout(()=>{
+        if(currentIndex-2>=0) currentIndex -=2;
+        render();
+        rightPage.classList.remove("flip");
+        rightPage.style.zIndex = 2;
+    },400);
+}
+
+// Arrow keys
+document.addEventListener("keydown", function(event) {
+    if(event.key === "ArrowRight") next();
+    else if(event.key === "ArrowLeft") prev();
 });
+
+// Mobile swipe
+const container = document.getElementById("magazineContainer");
+let startX = 0;
+container.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; });
+container.addEventListener('touchend', e=>{
+    let endX = e.changedTouches[0].clientX;
+    let diff = endX - startX;
+    if(diff>50) prev();
+    else if(diff<-50) next();
+});
+
 // Initial load
 loadNews();

@@ -1,343 +1,104 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
-body, html {
-    height: 100%;
-    background: linear-gradient(to bottom, #111, #222); /* cinematic dark background */
-    color: #fff;
-}
+/* Reset and base styles (your existing) */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Arial',sans-serif; }
+body, html { height:100%; background: linear-gradient(to bottom,#111,#222); color:#fff; }
 
 /* Header */
 header {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: #111;
-    padding: 15px 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 1000;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    top:0; left:0; width:100%;
+    background:#111;
+    padding:15px 30px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    z-index:1000;
+    box-shadow:0 3px 10px rgba(0,0,0,0.5);
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 15px;
-}
-
-.logo {
-    width: 50px;
-    height: 50px;
-}
-
-header h1 {
-    font-size: 1.8rem;
-    color: #e50914; /* Netflix red style */
-}
-
-.date-picker {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.date-picker input {
-    padding: 6px 10px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-}
-
-.date-picker button {
-    background: #e50914;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.date-picker button:hover {
-    background: #bf0810;
-}
+.header-left { display:flex; align-items:center; justify-content:flex-start; gap:15px; }
+.logo { width:50px; height:50px; }
+header h1 { font-size:1.8rem; color:#e50914; }
 
 /* Main content */
 main {
-    padding-top: 110px; /* header height */
-    padding-bottom: 150px; /* footer + pagination */
-    max-width: 1200px;
-    margin: 0 auto;
+    position: absolute;
+    top:110px; bottom:100px; left:0; right:0;
+    display:flex;
+    justify-content:center; align-items:center;
+    padding:0 20px;
+    overflow-y:auto;
+    background:#111;
 }
 
 /* Magazine container */
 .magazine-container {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.page {
-    flex: 1;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    min-height: 400px;
-    transition: transform 0.3s ease;
-}
-
-.page:hover {
-    transform: scale(1.02);
-}
-
-.news-img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    margin: 10px 0;
-}
-
-/* Pagination fixed above footer */
-.pagination {
-    position: fixed;
-    bottom: 50px; /* above footer */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 1001;
-}
-
-.pagination button {
-    background: #e50914;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.pagination button:hover {
-    background: #bf0810;
-}
-
-/* Footer fixed */
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #111;
-    color: #aaa;
-    text-align: center;
-    padding: 15px 0;
-    z-index: 1000;
-    font-size: 0.9rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .magazine-container {
-        flex-direction: column;
-    }
-
-    .logo {
-        width: 40px;
-        height: 40px;
-    }
-
-    header h1 {
-        font-size: 1.4rem;
-    }
-
-    .date-picker {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-
-    .pagination {
-        bottom: 80px;
-        gap: 10px;
-    }
-
-    .pagination button {
-        padding: 8px 12px;
-    }
-}
-
-/* Main content fixed height */
-main {
-    position: absolute;       /* fixed between header and footer */
-    top: 110px;               /* below fixed header */
-    bottom: 100px;            /* above fixed footer + pagination */
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;  /* center the magazine horizontally */
-    align-items: center;      /* center vertically */
-    padding: 0 20px;
-    overflow-y: auto;         /* scroll only inside content area */
-    background: #111;         /* dark cinematic background */
-}
-
-/* Magazine container fixed size */
-.magazine-container {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    height: 100%;            /* occupy full main area */
-}
-
-.page {
-    flex: 1;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    height: 100%;            /* fixed height to fill middle section */
-    overflow-y: auto;        /* scroll inside each page if content overflows */
-    transition: transform 0.3s ease;
-}
-
-.page:hover {
-    transform: scale(1.02);
-}
-
-/* Magazine container fills middle content */
-.magazine-container {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: stretch; /* make pages stretch vertically */
-}
-
-.page {
-    flex: 1;                  /* each page occupies half width */
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    height: 100%;             /* fill container height */
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* top content + bottom page number */
-}
-
-.news-img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    margin: 10px 0;
-}
-
-/* Page number at bottom */
-.page-number {
-    text-align: right;
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-top: 10px;
-}
-
-/* Container perspective for 3D effect */
-.magazine-container {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: stretch;
-    perspective: 1200px; /* required for 3D flip effect */
-}
-
-.page {
-    flex: 1;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    height: 100%;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    /* Flip animation */
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease-in-out;
-}
-
-
-
-/* Container with perspective */
-.magazine-container {
     position: relative;
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: stretch;
-    perspective: 1500px; /* 3D perspective for realistic flip */
+    display:flex; gap:20px;
+    width:100%; height:100%;
+    justify-content:center; align-items:stretch;
+    perspective:1500px; /* 3D effect */
 }
 
-/* Left page static */
-.page-left {
-    flex: 1;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    height: 100%;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    backface-visibility: hidden;
-    z-index: 1; /* below flipping page */
-    transform-origin: right;          /* flip from right edge */
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease-in-out;
+/* Desktop left/right pages */
+.page-left, .page-right {
+    flex:1; background:#1c1c1c; padding:20px; border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.6);
+    height:100%; overflow-y:auto;
+    display:flex; flex-direction:column; justify-content:space-between;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+    transition:transform 0.8s ease-in-out;
 }
 
-/* Right page flips over left page */
-.page-right {
-    flex: 1;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    height: 100%;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.page-left { z-index:1; transform-origin:right; }
+.page-right { z-index:2; transform-origin:left; }
+.page-right.flip { transform:rotateY(-180deg); }
+.page-left.flip { transform:rotateY(180deg); }
 
-    transform-origin: left;          /* flip from right edge */
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease-in-out;
-    backface-visibility: hidden;
-    z-index: 2; /* on top during flip */
+/* Mobile single page (hidden on desktop) */
+.page-mobile {
+    display:none; width:100%; height:100%;
+    background:#1c1c1c; padding:20px; border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.6);
+    overflow-y:auto; display:flex; flex-direction:column; justify-content:space-between;
 }
 
-.page-right.flip {
-    transform: rotateY(-180deg);       /* forward flip: right-to-left */
+/* Page number */
+.page-number { text-align:right; font-size:0.9rem; color:#aaa; margin-top:10px; }
+
+/* News images */
+.news-img { width:100%; height:auto; border-radius:6px; margin:10px 0; }
+
+/* Pagination */
+.pagination {
+    position: fixed; bottom:50px; left:50%; transform:translateX(-50%);
+    display:flex; gap:20px; z-index:1001;
 }
-.page-left.flip {
-    transform: rotateY(180deg);       /* forward flip: right-to-left */
+.pagination button {
+    background:#e50914; color:#fff; border:none;
+    padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s;
+}
+.pagination button:hover { background:#bf0810; }
+
+/* Footer */
+footer {
+    position: fixed; bottom:0; left:0; width:100%;
+    background:#111; color:#aaa; text-align:center; padding:15px 0; z-index:1000; font-size:0.9rem;
+}
+
+/* Responsive for mobile */
+@media(max-width:768px){
+    /* Hide desktop pages, show mobile single page */
+    .page-left, .page-right { display:none; }
+    .page-mobile { display:flex; }
+
+    .logo { width:40px; height:40px; }
+    header h1 { font-size:1.4rem; }
+
+    .pagination { bottom:80px; gap:10px; }
+    .pagination button { padding:8px 12px; }
+}
+/* Hide mobile page on desktop */
+.page-mobile {
+    display: none !important;
 }
