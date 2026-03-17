@@ -54,17 +54,22 @@ function render(){
         return;
     }
 
+    // Desktop 2-page spread
     const leftPage = document.getElementById("leftPage");
     const rightPage = document.getElementById("rightPage");
 
-    leftPage.innerHTML = (pages[currentIndex] || "") + `<div class="page-number">${currentIndex+1}</div>`;
-    rightPage.innerHTML = (pages[currentIndex+1] || "") + `<div class="page-number">${currentIndex+2}</div>`;
+    leftPage.innerHTML = (pages[currentIndex] || "<p>No articles</p>") +
+        `<div class="page-number">${currentIndex + 1}</div>`;
+    rightPage.innerHTML = (pages[currentIndex + 1] || "<p>No articles</p>") +
+        `<div class="page-number">${currentIndex + 2}</div>`;
 }
 
 // Mobile render
 function renderMobile(){
     const currentPageEl = document.getElementById("currentPage");
-    currentPageEl.innerHTML = (pages[currentIndex] || "") + `<div class="page-number">${currentIndex+1}</div>`;
+    currentPageEl.innerHTML = (pages[currentIndex] || "<p>No articles</p>") +
+        `<div class="page-number">${currentIndex + 1}</div>`;
+    return;
 }
 
 // Next page
