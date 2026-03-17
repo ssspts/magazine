@@ -1,11 +1,13 @@
-const API_KEY = "pub_43d82f7874b149b5831109b9c8bb6eaa";
+const API_KEY = "pub_43d82f7874b149b5831109b9c8bb6eaa"; // replace with your key
 let pages = [];
 let currentIndex = 0;
 let nextPageToken = null;
 let loadingNext = false;
 
 // Detect mobile
-function isMobile() { return window.innerWidth <= 768; }
+function isMobile() {
+    return window.innerWidth <= 768;
+}
 
 // Load news
 async function loadNews(nextToken = null){
@@ -26,7 +28,6 @@ async function loadNews(nextToken = null){
             return;
         }
 
-        // Map articles to HTML pages
         const newPages = data.results.map(item => `
             <h3>${item.title}</h3>
             ${item.image_url ? `<img src="${item.image_url}" class="news-img">` : ""}
@@ -36,9 +37,9 @@ async function loadNews(nextToken = null){
         `);
 
         pages = pages.concat(newPages);
-        nextPageToken = data.nextPage || null; // save token for next fetch
+        nextPageToken = data.nextPage || null;
         render();
-    } catch(err){
+    } catch(err) {
         console.error("Error fetching news:", err);
         if(pages.length === 0) pages = ["<p>Error fetching articles.</p>"];
         render();
@@ -50,7 +51,10 @@ async function loadNews(nextToken = null){
 // Render pages
 function render(){
     if(isMobile()){
-        renderMobile();
+        // Show mobile page
+        const mobilePage = document.getElementById("currentPage");
+        mobilePage.innerHTML = (pages[currentIndex] || "<p>No articles yet.</p>") +
+            `<div class="page-number">${currentIndex+1}</div>`;
         return;
     }
 
@@ -58,32 +62,22 @@ function render(){
     const leftPage = document.getElementById("leftPage");
     const rightPage = document.getElementById("rightPage");
 
-    leftPage.innerHTML = (pages[currentIndex] || "<p>No articles</p>") +
-        `<div class="page-number">${currentIndex + 1}</div>`;
-    rightPage.innerHTML = (pages[currentIndex + 1] || "<p>No articles</p>") +
-        `<div class="page-number">${currentIndex + 2}</div>`;
-}
-
-// Mobile render
-function renderMobile(){
-    const currentPageEl = document.getElementById("currentPage");
-    currentPageEl.innerHTML = (pages[currentIndex] || "<p>No articles</p>") +
-        `<div class="page-number">${currentIndex + 1}</div>`;
-    return;
+    leftPage.innerHTML = (pages[currentIndex] || "<p>No articles yet.</p>") +
+        `<div class="page-number">${currentIndex+1}</div>`;
+    rightPage.innerHTML = (pages[currentIndex+1] || "<p>No articles yet.</p>") +
+        `<div class="page-number">${currentIndex+2}</div>`;
 }
 
 // Next page
 function next(){
     if(isMobile()){
         if(currentIndex + 1 < pages.length) currentIndex++;
-        renderMobile();
-        // load more if nearing end
+        render();
         if(currentIndex + 1 >= pages.length && nextPageToken) loadNews(nextPageToken);
         return;
     }
 
     const rightPage = document.getElementById("rightPage");
-    rightPage.style.zIndex = 3;
     rightPage.classList.add("flip");
 
     setTimeout(()=>{
@@ -91,37 +85,34 @@ function next(){
         if(currentIndex + 2 >= pages.length && nextPageToken) loadNews(nextPageToken);
         render();
         rightPage.classList.remove("flip");
-        rightPage.style.zIndex = 2;
-    },400);
+    }, 400);
 }
 
 // Previous page
 function prev(){
     if(isMobile()){
         if(currentIndex -1 >=0) currentIndex--;
-        renderMobile();
+        render();
         return;
     }
 
     const rightPage = document.getElementById("leftPage");
-    rightPage.style.zIndex = 3;
     rightPage.classList.add("flip");
 
     setTimeout(()=>{
         if(currentIndex-2>=0) currentIndex -=2;
         render();
         rightPage.classList.remove("flip");
-        rightPage.style.zIndex = 2;
-    },400);
+    }, 400);
 }
 
 // Arrow keys
-document.addEventListener("keydown", function(event) {
-    if(event.key === "ArrowRight") next();
-    else if(event.key === "ArrowLeft") prev();
+document.addEventListener("keydown", function(event){
+    if(event.key==="ArrowRight") next();
+    else if(event.key==="ArrowLeft") prev();
 });
 
-// Mobile swipe
+// Mobile swipe support
 const container = document.getElementById("magazineContainer");
 let startX = 0;
 container.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; });
@@ -131,6 +122,9 @@ container.addEventListener('touchend', e=>{
     if(diff>50) prev();
     else if(diff<-50) next();
 });
+
+// Re-render on window resize (mobile <-> desktop)
+window.addEventListener("resize", render);
 
 // Initial load
 loadNews();
