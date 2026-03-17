@@ -90,7 +90,7 @@ footer {
 @media(max-width:768px){
     /* Hide desktop pages, show mobile single page */
     .page-left, .page-right { display:none; }
-    .page-mobile { display:flex; }
+    .page-mobile { display: flex !important; }
 
     .logo { width:40px; height:40px; }
     header h1 { font-size:1.4rem; }
